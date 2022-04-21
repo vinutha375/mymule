@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="68ae7d52-1e19-4e06-bb4d-a536b525cc11" >
+		<http:listener-connection host="0.0.0.0" port="8087" />
+	</http:listener-config>
+	<flow name="for-eachFlow" doc:id="7134f109-b743-4f96-8610-67c1a6ef4129" >
+		<http:listener doc:name="Listener" doc:id="27d2ad5c-ba39-4822-a473-6cecb61c392f" config-ref="HTTP_Listener_config" path="/foreach"/>
+		<ee:transform doc:name="Transform Message" doc:id="b25412b8-1b13-4d73-8e0d-637f8db4c498" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+ 1 to 10 map 
+{
+	id : 200 + $,
+	name : "vinutha",
+	number :123
+	
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<parallel-foreach doc:name="Parallel For Each" doc:id="03d356f5-7339-4222-b765-fa0704ff99ba" >
+			<logger level="INFO" doc:name="Logger" doc:id="d4ed9d85-9801-427d-af45-190cfa9e3cc0" message="#[payload]"/>
+		</parallel-foreach>
+	</flow>
+</mule>
